@@ -33,6 +33,8 @@ import {
   writeLockfile,
 } from './util.js';
 
+import {command} from './dev/command';
+
 type InstallResult = 'SUCCESS' | 'ASSET' | 'FAIL';
 interface DependencyLoc {
   type: 'JS' | 'ASSET';
@@ -518,6 +520,20 @@ export async function cli(args: string[]) {
   if (cliFlags.reload) {
     console.log(`${chalk.yellow('ℹ')} clearing CDN cache...`);
     await clearCache();
+  }
+  if (cliFlags['_'].length > 3) {
+    console.log(`Unexpected multiple commands`);
+    process.exit(1);
+  }
+  if (cliFlags['_'][2] === 'dev') {
+    await command({
+      cwd,
+      port: (cliFlags as any).port || 3000,
+      publicDir: path.resolve(cwd, (cliFlags as any).public || 'public'),
+      fallback: (cliFlags as any).fallback || 'index.html',
+      paths: [['/src/', '/src/']],
+    });
+    return;
   }
 
   // Load the current package manifest

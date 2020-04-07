@@ -62,7 +62,7 @@ function rewriteImport(importMap, imp, file, webModulesUrl, shouldResolveRelativ
     return imp;
   }
   if (!isSourceImport && !mappedImport) {
-    console.log(`warn: bare import "${imp}" not found in import map, ignoring...`);
+    console.warn(`warn: bare import "${imp}" not found in import map, ignoring...`);
     return imp;
   }
   if (isSourceImport && shouldResolveRelative) {
